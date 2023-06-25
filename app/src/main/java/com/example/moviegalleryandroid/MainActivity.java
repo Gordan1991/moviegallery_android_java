@@ -2,6 +2,11 @@ package com.example.moviegalleryandroid;
 
 import android.os.Bundle;
 
+import com.example.moviegalleryandroid.controller.MovieController;
+import com.example.moviegalleryandroid.model.MovieModel;
+import com.example.moviegalleryandroid.service.ApiClient;
+import com.example.moviegalleryandroid.service.ApiMethod;
+import com.example.moviegalleryandroid.view.MovieView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private MovieController movieController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +36,17 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        MovieModel movieModel = new MovieModel();
+        MovieView movieView = new MovieView(movieController);
+        movieController = new MovieController(movieModel, movieView);
+
+        // Trigger API data retrieval
+        movieController.fetchPopularMovieData();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+
+
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
@@ -42,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
     }
 
     @Override
