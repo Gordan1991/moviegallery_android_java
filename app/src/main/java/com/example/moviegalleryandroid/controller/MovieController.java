@@ -3,9 +3,12 @@ package com.example.moviegalleryandroid.controller;
 import android.util.Log;
 
 import com.example.moviegalleryandroid.model.MovieModel;
+import com.example.moviegalleryandroid.rvadapter.RVPopularMovieListAdapter;
 import com.example.moviegalleryandroid.service.ApiClient;
 import com.example.moviegalleryandroid.service.ApiMethod;
 import com.example.moviegalleryandroid.view.MovieView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -14,12 +17,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieController {
-   private MovieModel model;
+   private ArrayList<MovieModel.resultsData> popularMovieList = new ArrayList<>();
+   private RVPopularMovieListAdapter rvPopularMovieListAdapter;
+
    private MovieView view;
 
-   public MovieController(MovieModel model, MovieView view){
-      this.model = model;
-      this.view = view;
+   public MovieController(RVPopularMovieListAdapter rvPopularMovieListAdapter){
+      this.rvPopularMovieListAdapter = rvPopularMovieListAdapter;
+   }
+
+   public void setPopularMovieList(ArrayList<MovieModel.resultsData> popularMovieList) {
+      this.popularMovieList = popularMovieList;
+   }
+
+   public ArrayList<MovieModel.resultsData> getPopularMovieList() {
+      return popularMovieList;
    }
 
    public void fetchPopularMovieData(){
@@ -31,12 +43,17 @@ public class MovieController {
          public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
             Log.e("MovieController","onResponse Code: " + response.code());
 
-            ArrayList<MovieModel.resultsData> resultData = response.body().getResults();
-
-            for(MovieModel.resultsData data : resultData){
-               Log.e("MovieController","onResponse result: " + data.getId());
+            if(response.code() == 200){
+               ArrayList<MovieModel.resultsData> resultData = new ArrayList<MovieModel.resultsData>();
+               resultData.addAll(response.body().getResults());
+               setPopularMovieList(resultData);
+               //rvPopularMovieListAdapter.notifyDataSetChanged();
+//               model.setResults(resultData);
+//               view.displayMovieData();
 
             }
+
+
 
          }
 

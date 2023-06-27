@@ -1,70 +1,83 @@
 package com.example.moviegalleryandroid;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.moviegalleryandroid.controller.MovieController;
 import com.example.moviegalleryandroid.model.MovieModel;
+import com.example.moviegalleryandroid.rvadapter.RVPopularMovieListAdapter;
 import com.example.moviegalleryandroid.service.ApiClient;
 import com.example.moviegalleryandroid.service.ApiMethod;
 import com.example.moviegalleryandroid.view.MovieView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import java.util.ArrayList;
 
-import com.example.moviegalleryandroid.databinding.ActivityMainBinding;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-    private MovieController movieController;
+    RecyclerView rv_popularMovieList;
+    RVPopularMovieListAdapter rvPopularMovieListAdapter;
+
+    ArrayList<MovieModel.resultsData> popularMovieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        popularMovieList = new ArrayList<>();
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        rv_popularMovieList = findViewById(R.id.rv_popularmovielist);
+        rv_popularMovieList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        rvPopularMovieListAdapter =  new RVPopularMovieListAdapter(MainActivity.this, popularMovieList);
+        rv_popularMovieList.setAdapter(rvPopularMovieListAdapter);
 
-        setSupportActionBar(binding.toolbar);
-
-        MovieModel movieModel = new MovieModel();
-        MovieView movieView = new MovieView(movieController);
-        movieController = new MovieController(movieModel, movieView);
+        //MovieModel movieModel = new MovieModel();
+        //MovieView movieView = new MovieView(movieController);
+        //movieController = new MovieController(movieModel, movieView);
 
         // Trigger API data retrieval
-        movieController.fetchPopularMovieData();
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-
+        //movieController.fetchPopularMovieData();
+        fetchPopularMovieData();
 
 
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+    public void fetchPopularMovieData(){
+        ApiMethod movieMethod = ApiClient.getApiClientInstance().create(ApiMethod.class);
+        Call<MovieModel> call = movieMethod.getAllMoviePopularData();
+
+        call.enqueue(new Callback<MovieModel>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+                Log.e("MovieController","onResponse Code: " + response.code());
+
+                if(response.code() == 200){
+                    popularMovieList.addAll(response.body().getResults());
+                    rvPopularMovieListAdapter.notifyDataSetChanged();
+                    //rvPopularMovieListAdapter.notifyDataSetChanged();
+//               model.setResults(resultData);
+//               view.displayMovieData();
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieModel> call, Throwable t) {
+                Log.e("MovieController","onFailure Code: " + t.getMessage());
+
             }
         });
-
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }
