@@ -1,6 +1,8 @@
 package com.example.moviegalleryandroid.rvadapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.moviegalleryandroid.MovieDetailActivity;
 import com.example.moviegalleryandroid.R;
 import com.example.moviegalleryandroid.model.MovieModel;
 
@@ -35,7 +38,22 @@ public class RVPopularMovieListAdapter extends RecyclerView.Adapter<RVPopularMov
 
    @Override
    public void onBindViewHolder(@NonNull RVPopularMovieListAdapter.ViewHolder holder, int position) {
-         holder.bind(popularMovieList.get(position));
+      final MovieModel.resultsData movieData = popularMovieList.get(position);
+
+      holder.bind(movieData);
+
+      holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            // Handle item click
+            Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
+            intent.putExtra("movieId", movieData.getId());
+            v.getContext().startActivity(intent);
+            Log.e("RVPopularMovieListAdapter","onResponse Code: " + movieData.getId());
+
+         }
+      });
    }
 
    @Override
@@ -53,6 +71,8 @@ public class RVPopularMovieListAdapter extends RecyclerView.Adapter<RVPopularMov
          tv_movie_title = itemView.findViewById(R.id.tv_movie_title);
          tv_movie_release_date = itemView.findViewById(R.id.tv_movie_release_date);
          iv_movie_img = itemView.findViewById(R.id.iv_movie_img);
+
+
       }
 
       public void bind(MovieModel.resultsData resultData){
