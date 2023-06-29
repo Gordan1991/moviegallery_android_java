@@ -1,5 +1,6 @@
 # Movie Gallery Android Java
 Movie Gallery App - Android Java
+1) Get Api Service from https://developer.themoviedb.org/ 
 
 # Popular Movie List
 <img width="300" alt="Screenshot 2023-06-29 at 12 13 21 PM" src="https://github.com/Gordan1991/moviegallery_android_java/assets/76845144/328ea917-5150-4e7a-a05b-6646fb0d738a">
