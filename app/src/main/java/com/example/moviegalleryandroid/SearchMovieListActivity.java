@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.moviegalleryandroid.model.MovieModel;
 import com.example.moviegalleryandroid.rvadapter.RVMovieListAdapter;
@@ -31,6 +32,8 @@ public class SearchMovieListActivity extends AppCompatActivity {
 
     private String searchMovie = "";
     private ProgressBar loadingBar;
+
+    private TextView tv_searchMovieHeader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,8 @@ public class SearchMovieListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        tv_searchMovieHeader = findViewById(R.id.tv_searchMovieHeader);
+
         loadingBar = findViewById(R.id.loadingBar);
 
         rv_searchMovieList = findViewById(R.id.rv_searchmovielist);
@@ -51,6 +56,7 @@ public class SearchMovieListActivity extends AppCompatActivity {
 
         // Trigger API data retrieval
         searchMovie = getIntent().getExtras().getString("searchMovie");
+        tv_searchMovieHeader.setText("Search Results : " + searchMovie);
         fetchSearchMovieData(searchMovie);
     }
 
