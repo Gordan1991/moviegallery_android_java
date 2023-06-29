@@ -7,7 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +28,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView tv_movieDetail_title, tv_movieDetail_release_date;
     private ImageView iv_movieDetail_img;
     private Toolbar toolbar;
+    private ProgressBar loadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         toolbar.setTitle("Movie Detail");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        loadingBar = findViewById(R.id.loadingBar);
 
 
         tv_movieDetail_title = findViewById(R.id.tv_movieDetail_title);
@@ -63,8 +68,10 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Log.e("fetchMovieDetailData","onResponse Code: " + response.code());
 
                 if(response.code() == 200){
+                    loadingBar.setVisibility(View.GONE);
+
                     tv_movieDetail_title.setText(response.body().getTitle());
-                    tv_movieDetail_release_date.setText(response.body().getRelease_date());
+                    tv_movieDetail_release_date.setText("Release Date : " + response.body().getRelease_date());
                     Glide.with(MovieDetailActivity.this).load("https://image.tmdb.org/t/p/w500/"+ response.body().getPoster_path()).into(iv_movieDetail_img);
 
                 }

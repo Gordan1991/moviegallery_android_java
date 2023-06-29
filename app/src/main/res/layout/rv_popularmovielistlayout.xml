@@ -19,6 +19,7 @@
         <TextView
             android:id="@+id/tv_movie_title"
             android:textSize="15sp"
+            android:textStyle="bold"
             android:text="title"
             android:layout_toEndOf="@+id/iv_movie_img"
             android:layout_width="match_parent"

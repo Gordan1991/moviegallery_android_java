@@ -7,8 +7,53 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/rv_popularmovielist"
+  <LinearLayout
+      android:id="@+id/searchContainer"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    <androidx.appcompat.widget.SearchView
+        app:queryHint="Search Movie..."
+        android:background="@drawable/search_view_bg"
+        android:layout_weight="1"
+        android:id="@+id/sv_searchMovie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:layout_margin="5dp"
+        android:id="@+id/btn_search"
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/tv_header"
+      android:text="Popular Movie"
+      android:textSize="20sp"
+      android:padding="5dp"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/searchContainer"/>
+
+  <RelativeLayout
+      android:id="@+id/listContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/tv_header">
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_popularmovielist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+  </RelativeLayout>
+
 </RelativeLayout>
